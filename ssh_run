@@ -1,0 +1,22 @@
+#!/usr/local/bin/python3
+"""
+author: chien-de li
+"""
+import asyncio
+from async_ssh.async_ssh import ssh_run
+
+
+async def main():
+    """
+    main function
+    """
+    task_list = []
+    for i in range(5):
+        task_list.append(
+            ssh_run("asgc-ui03.grid.sinica.edu.tw", "cdli", f"echo HELLO {i}"))
+    data_return = await asyncio.gather(*task_list)
+    print(data_return)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
