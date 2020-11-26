@@ -1,21 +1,57 @@
 #!/usr/local/bin/python3
 """
 author: chien-de li
+
+roadmap
+1. use hostname list and command [done]
+2. add password support
+3. argparse --command and --hosts
+4. move main function to lib
 """
+import argparse
 import asyncio
-from async_ssh.async_ssh import ssh_run
+import os
+from rich.console import Console
+from rich.table import Table
+from async_ssh.async_ssh import run_on_host
 
 
 async def main():
     """
     main function
     """
-    task_list = []
-    for i in range(5):
-        task_list.append(
-            ssh_run("asgc-ui03.grid.sinica.edu.tw", "cdli", f"echo HELLO {i}"))
-    data_return = await asyncio.gather(*task_list)
-    print(data_return)
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-l',
+                        '--hosts',
+                        nargs='+',
+                        help='<Required> Set hosts list',
+                        required=True)
+    parser.add_argument('-c',
+                        '--command',
+                        type=str,
+                        help='<Required> Set the command to run',
+                        required=True)
+    parser.add_argument('-a',
+                        '--account',
+                        type=str,
+                        help='<Required> Set the account to run',
+                        default=os.environ["USER"])
+
+    args = parser.parse_args()
+    command = args.command
+    account = args.account
+    hostnames = args.hosts
+
+    result_dict = await run_on_host(hostnames, account, command)
+
+    table = Table(title=f"COMMAND : \"{command}\"")
+    table.add_column("Hostname", justify="left", style="cyan", no_wrap=True)
+    table.add_column("Result", justify="center", style="green")
+    for hostname in hostnames:
+        table.add_row(hostname, result_dict[hostname])
+    console = Console()
+    console.print(table)
 
 
 if __name__ == "__main__":
