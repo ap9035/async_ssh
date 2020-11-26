@@ -22,8 +22,7 @@ async def main():
     """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-h',
-                        '--hosts',
+    parser.add_argument('--hosts',
                         nargs='+',
                         help='<Required> Set hosts list',
                         required=True)
