@@ -41,6 +41,6 @@ async def run_on_host(hostname_list, account, command, ssh_key):
             result = await asyncio.wait_for(task_dict[hostname], 10)
             result_dict[hostname] = result.strip()
         except asyncio.TimeoutError:
-            print("timeout")
+            print(f"{account}@{hostname} cmd:{command} timeout")
 
     return result_dict
