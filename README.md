@@ -13,9 +13,14 @@ Async login to server and run command
         - [x] --nodes
         - [x] --cmd
         - [x] --user
+        - [] --key -k
 - [] password login
 - [] scp tool and function
 - [] error handling
     - [] timeout
+    - [] known-host
     - [] wrong password?
     - [] dns resolve error
+- [] configure file
+    - [] default key
+    - [] default username

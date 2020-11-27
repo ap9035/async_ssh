@@ -5,8 +5,7 @@ author: chien-de li
 roadmap
 1. use hostname list and command [done]
 2. add password support
-3. argparse --command and --hosts
-4. move main function to lib
+3. argparse --key
 """
 import argparse
 import asyncio
@@ -22,7 +21,8 @@ async def main():
     """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--hosts',
+    parser.add_argument('-t',
+                        '--hosts',
                         nargs='+',
                         help='<Required> Set hosts list',
                         required=True)
@@ -34,15 +34,21 @@ async def main():
     parser.add_argument('-a',
                         '--account',
                         type=str,
-                        help='<Required> Set the account to run',
+                        help='Set the account to run, default $USER',
                         default=os.environ["USER"])
+    parser.add_argument('-i',
+                        '--key',
+                        type=str,
+                        help='Set the identity_file, default: ~/.ssh/id_rsa"',
+                        default=f"{os.environ['HOME']}/.ssh/id_rsa")
 
     args = parser.parse_args()
     command = args.command
     account = args.account
     hostnames = args.hosts
+    key = args.key
 
-    result_dict = await run_on_host(hostnames, account, command)
+    result_dict = await run_on_host(hostnames, account, command, key)
 
     table = Table(title=f"COMMAND : \"{command}\"")
     table.add_column("Hostname", justify="left", style="cyan", no_wrap=True)

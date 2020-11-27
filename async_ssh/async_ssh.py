@@ -22,7 +22,7 @@ async def ssh_run(hostname, username, command, ssh_key=SSH_KEY):
     return stdout.decode()
 
 
-async def run_on_host(hostname_list, account, command):
+async def run_on_host(hostname_list, account, command, ssh_key):
     """
     run a command on multiple hosts
     """
@@ -30,7 +30,8 @@ async def run_on_host(hostname_list, account, command):
     # create event loop
     task_dict = {}
     for hostname in hostname_list:
-        task = asyncio.create_task(ssh_run(hostname, account, command))
+        task = asyncio.create_task(ssh_run(hostname, account, command,
+                                           ssh_key))
         task_dict[hostname] = task
 
     # run concurrently and get result
