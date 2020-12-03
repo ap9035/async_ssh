@@ -12,7 +12,7 @@ import asyncio
 import os
 from rich.console import Console
 from rich.table import Table
-from async_ssh.async_ssh import run_on_host
+from async_ssh.async_ssh import run_on_host, copy_to_host
 
 
 async def main():
@@ -41,13 +41,17 @@ async def main():
                         type=str,
                         help='Set the identity_file, default: ~/.ssh/id_rsa"',
                         default=f"{os.environ['HOME']}/.ssh/id_rsa")
+    parser.add_argument('-f', '--files', nargs="+", help="Copy data to hosts")
 
     args = parser.parse_args()
     command = args.command
     account = args.account
     hostnames = args.hosts
     key = args.key
+    files = args.files
 
+    if files:
+        await copy_to_host(hostnames, account, files, key)
     result_dict = await run_on_host(hostnames, account, command, key)
 
     table = Table(title=f"COMMAND : \"{command}\"")
