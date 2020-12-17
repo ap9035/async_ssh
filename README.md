@@ -15,7 +15,8 @@ Async login to server and run command
         - [x] --user
         - [x] --key -k
     - [x] input files(--files -f)
-- [ ] add logging package
+- [ ] add logging package to show debug info
+- [ ] add silence mode(-q)
 - [ ] password login
 - [ ] scp tool and function
 - [ ] error handling
@@ -26,3 +27,4 @@ Async login to server and run command
 - [ ] configure file
     - [ ] default key
     - [ ] default username
+- [x] timeout handling

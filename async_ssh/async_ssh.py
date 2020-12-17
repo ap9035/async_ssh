@@ -22,7 +22,7 @@ async def ssh_run(hostname, username, command, ssh_key=SSH_KEY):
     return stdout.decode()
 
 
-async def run_on_host(hostname_list, account, command, ssh_key):
+async def run_on_host(hostname_list, account, command, ssh_key, timeout=10):
     """
     run a command on multiple hosts
     """

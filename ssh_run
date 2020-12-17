@@ -42,6 +42,11 @@ async def main():
                         help='Set the identity_file, default: ~/.ssh/id_rsa"',
                         default=f"{os.environ['HOME']}/.ssh/id_rsa")
     parser.add_argument('-f', '--files', nargs="+", help="Copy data to hosts")
+    parser.add_argument('-T',
+                        '--timeout',
+                        type=int,
+                        help="set timeout to each connection",
+                        default=300)
 
     args = parser.parse_args()
     command = args.command
@@ -49,10 +54,15 @@ async def main():
     hostnames = args.hosts
     key = args.key
     files = args.files
+    timeout = args.timeout
 
     if files:
         await copy_to_host(hostnames, account, files, key)
-    result_dict = await run_on_host(hostnames, account, command, key)
+    result_dict = await run_on_host(hostnames,
+                                    account,
+                                    command,
+                                    key,
+                                    timeout=timeout)
 
     table = Table(title=f"COMMAND : \"{command}\"")
     table.add_column("Hostname", justify="left", style="cyan", no_wrap=True)
