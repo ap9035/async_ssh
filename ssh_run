@@ -67,8 +67,10 @@ async def main():
     table = Table(title=f"COMMAND : \"{command}\"")
     table.add_column("Hostname", justify="left", style="cyan", no_wrap=True)
     table.add_column("Result", justify="center", style="green")
+    table.add_column("Time", justify="center", style="green")
     for hostname in hostnames:
-        table.add_row(hostname, result_dict[hostname])
+        table.add_row(hostname, result_dict[hostname]["content"],
+                      f'{result_dict[hostname]["time"]}')
     console = Console()
     console.print(table)
 
