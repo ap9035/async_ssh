@@ -4,6 +4,7 @@ author: chien-de li
 
 import asyncio
 import os
+import time
 
 HOME = os.environ['HOME']
 SSH_KEY = f"{HOME}/.ssh/id_rsa"
@@ -13,13 +14,15 @@ async def ssh_run(hostname, username, command, ssh_key=SSH_KEY):
     """
     ssh login and run command
     """
+    t_start = time.time()
     shell_command = f"ssh -i {ssh_key} -X {username}@{hostname} '{command}'"
     proc = await asyncio.create_subprocess_shell(
         shell_command,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE)
     stdout, _ = await proc.communicate()
-    return stdout.decode()
+    t_finish = time.time()
+    return (stdout.decode(), t_finish - t_start)
 
 
 async def run_on_host(hostname_list, account, command, ssh_key, timeout=10):
@@ -39,7 +42,9 @@ async def run_on_host(hostname_list, account, command, ssh_key, timeout=10):
     for hostname in hostname_list:
         try:
             result = await asyncio.wait_for(task_dict[hostname], timeout)
-            result_dict[hostname] = result.strip()
+            result_dict[hostname] = {}
+            result_dict[hostname]["content"] = result[0].strip()
+            result_dict[hostname]["time"] = result[1]
         except asyncio.TimeoutError:
             print(
                 f"{account}@{hostname} cmd:{command} timeout after {timeout}s")
