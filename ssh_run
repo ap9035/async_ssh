@@ -69,8 +69,11 @@ async def main():
     table.add_column("Result", justify="center", style="green")
     table.add_column("Time", justify="center", style="green")
     for hostname in hostnames:
-        table.add_row(hostname, result_dict[hostname]["content"],
-                      f'{result_dict[hostname]["time"]}')
+        if hostname in result_dict.keys():
+            table.add_row(hostname, result_dict[hostname]["content"],
+                          f'{result_dict[hostname]["time"]}')
+        else:
+            table.add_row(hostname, "", "")
     console = Console()
     console.print(table)
 

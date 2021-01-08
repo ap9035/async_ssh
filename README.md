@@ -28,5 +28,7 @@ Async login to server and run command
     - [ ] default key
     - [ ] default username
 - [x] timeout handling
-- [ ] Add duration time
+- [x] Add duration time
 - [ ] csv mode
+- [x] bug, key error when timeout
+    - [ ] error handling
